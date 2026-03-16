@@ -1,6 +1,6 @@
 {
   "name": "zsk-react-i18n",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Reusable typed i18n wrapper for React + i18next + react-i18next",
   "keywords": [
     "i18n",
@@ -32,10 +32,12 @@
     "test": "bun test",
     "clean": "rm -rf dist"
   },
-  "peerDependencies": {
+  "dependencies": {
     "i18next": "^25.0.0",
-    "react": "^19.0.0",
     "react-i18next": "^16.0.0"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

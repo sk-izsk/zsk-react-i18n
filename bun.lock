@@ -4,15 +4,17 @@
   "workspaces": {
     "": {
       "name": "zsk-react-i18n",
+      "dependencies": {
+        "i18next": "^25.0.0",
+        "react-i18next": "^16.0.0",
+      },
       "devDependencies": {
         "@types/node": "^22.0.0",
         "@types/react": "^19.0.0",
         "typescript": "^5.9.0",
       },
       "peerDependencies": {
-        "i18next": "^25.0.0",
         "react": "^19.0.0",
-        "react-i18next": "^16.0.0",
       },
     },
   },
