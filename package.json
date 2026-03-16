@@ -2,6 +2,16 @@
   "name": "zsk-react-i18n",
   "version": "0.0.1",
   "description": "Reusable typed i18n wrapper for React + i18next + react-i18next",
+  "keywords": [
+    "i18n",
+    "i18next",
+    "react-i18next",
+    "react",
+    "typescript",
+    "localization",
+    "translations",
+    "internationalization"
+  ],
   "type": "module",
   "packageManager": "bun@1.2.5",
   "main": "./dist/index.js",
