@@ -1,6 +1,16 @@
 import { describe, expect, it } from 'bun:test'
 import React from 'react'
-import { createI18n, LocalizeProvider, type StorageLike } from '../src/index.js'
+import {
+  changeLanguage,
+  configureI18n,
+  createI18n,
+  defineLocalizeConfig,
+  getInitialLanguage,
+  getLanguage,
+  isSupportedLanguage,
+  LocalizeProvider,
+  type StorageLike,
+} from '../src/index.js'
 
 const en = {
   sidebar: {
@@ -45,6 +55,12 @@ class MockStorage implements StorageLike {
 }
 
 describe('createI18n', () => {
+  it('throws for direct handlers before initialization', () => {
+    expect(() => getLanguage()).toThrow(
+      'getLanguage requires LocalizeProvider with config or configureI18n(config) to run first.',
+    )
+  })
+
   it('persists language with custom storage key', async () => {
     const storage = new MockStorage()
 
@@ -116,5 +132,42 @@ describe('createI18n', () => {
     )
 
     expect(Boolean(element)).toBe(true)
+  })
+
+  it('supports package-level direct handlers after configureI18n', async () => {
+    const storage = new MockStorage()
+
+    configureI18n({
+      resources,
+      defaultLanguage: 'en',
+      fallbackLanguage: 'en',
+      storage,
+      persistLanguage: true,
+    })
+
+    expect(getInitialLanguage()).toBe('en')
+    expect(isSupportedLanguage('fr')).toBe(true)
+    expect(isSupportedLanguage('de')).toBe(false)
+
+    await changeLanguage('es')
+    expect(getLanguage()).toBe('es')
+    expect(storage.getItem('app-language')).toBe('es')
+  })
+
+  it('supports early direct handlers after defineLocalizeConfig registration', async () => {
+    const storage = new MockStorage()
+
+    defineLocalizeConfig({
+      resources,
+      defaultLanguage: 'en',
+      fallbackLanguage: 'en',
+      storage,
+      persistLanguage: true,
+    })
+
+    expect(getLanguage()).toBe('en')
+    await changeLanguage('fr')
+    expect(getLanguage()).toBe('fr')
+    expect(storage.getItem('app-language')).toBe('fr')
   })
 })

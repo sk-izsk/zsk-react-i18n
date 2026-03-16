@@ -1,6 +1,6 @@
 {
   "name": "zsk-react-i18n",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Reusable typed i18n wrapper for React + i18next + react-i18next",
   "keywords": [
     "i18n",
@@ -30,7 +30,11 @@
     "typecheck": "bunx tsc --noEmit",
     "typecheck:types": "bunx tsc -p tsconfig.test.json",
     "test": "bun test",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "verify": "bun run typecheck && bun run typecheck:types && bun test && bun run clean && bun run build && npm pack --dry-run",
+    "prepublishOnly": "bun run verify",
+    "publish:release": "npm publish",
+    "release": "bun run verify && npm publish"
   },
   "dependencies": {
     "i18next": "^25.0.0",

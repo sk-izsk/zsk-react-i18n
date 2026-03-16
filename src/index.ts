@@ -1,4 +1,12 @@
-export { createI18n, LocalizeProvider } from './createI18n.js'
+export {
+  AppTrans, changeLanguage,
+  configureI18n,
+  createI18n,
+  defineLocalizeConfig,
+  getInitialLanguage,
+  getLanguage,
+  isSupportedLanguage, LocalizeProvider, useAppTranslation
+} from './createI18n.js'
 export type {
   AppLanguage,
   CreatedI18n,

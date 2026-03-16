@@ -55,14 +55,23 @@ export const {
 ### Option B: Direct Provider
 
 ```tsx
-import { LocalizeProvider } from 'zsk-react-i18n'
+import {
+  AppTrans,
+  defineLocalizeConfig,
+  LocalizeProvider,
+  changeLanguage,
+  getInitialLanguage,
+  getLanguage,
+  isSupportedLanguage,
+  useAppTranslation,
+} from 'zsk-react-i18n'
 
-const config = {
+const config = defineLocalizeConfig({
   resources,
   defaultLanguage: 'en',
   fallbackLanguage: 'en',
   localStorageKey: 'app-language',
-}
+})
 
 export function App() {
   return (
@@ -71,7 +80,31 @@ export function App() {
     </LocalizeProvider>
   )
 }
+
+export function LanguageSwitcher() {
+  const { t } = useAppTranslation()
+
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        if (isSupportedLanguage('fr')) {
+          void changeLanguage('fr')
+        }
+      }}
+    >
+      {t('home.title')}
+      <AppTrans i18nKey="home.title" />
+      {getLanguage()} / {getInitialLanguage()}
+    </button>
+  )
+}
 ```
+
+This direct mode uses a runtime singleton configured by LocalizeProvider.
+
+If you need to call direct helpers before React mounts the provider,
+use `defineLocalizeConfig(config)` as shown above.
 
 ## Optional i18next module augmentation in consumer app
 
@@ -95,3 +128,18 @@ declare module 'i18next' {
 - `bun run typecheck`
 - `bun run typecheck:types`
 - `bun test`
+- `bun run verify` (runs checks + build + npm pack dry run)
+- `bun run release` (runs verify, then publishes)
+
+## Publish
+
+```bash
+npm whoami
+bun run release
+```
+
+If already verified and you only want to publish:
+
+```bash
+bun run publish:release
+```

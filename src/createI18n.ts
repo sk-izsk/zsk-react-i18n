@@ -92,7 +92,66 @@ export type LocalizeProviderProps<
   config: CreateI18nConfig<R, D, N>
 }>
 
+type RuntimeLocalize = {
+  i18n: I18nInstance
+  getInitialLanguage: () => string
+  getLanguage: () => string
+  isSupportedLanguage: (language: string) => boolean
+  changeLanguage: (language: string) => Promise<void>
+}
+
+type AnyCreatedI18n = CreatedI18n<ResourceTree, string, string>
+
 const DEFAULT_STORAGE_KEY = 'app-language'
+
+let activeLocalize: RuntimeLocalize | undefined
+let activeCreatedLocalize: AnyCreatedI18n | undefined
+let initializePendingLocalize: (() => void) | undefined
+
+const setActiveLocalize = (localize: RuntimeLocalize): void => {
+  activeLocalize = localize
+}
+
+const activateCreatedLocalize = <
+  R extends ResourceTree,
+  D extends AppLanguage<R>,
+  N extends NamespaceKey<R, D>,
+>(localize: CreatedI18n<R, D, N>): void => {
+  activeCreatedLocalize = localize as unknown as AnyCreatedI18n
+
+  setActiveLocalize({
+    i18n: localize.i18n,
+    getInitialLanguage: localize.getInitialLanguage,
+    getLanguage: localize.getLanguage,
+    isSupportedLanguage: localize.isSupportedLanguage,
+    changeLanguage: async (language: string) => {
+      if (localize.isSupportedLanguage(language)) {
+        await localize.changeLanguage(language)
+        return
+      }
+
+      await localize.changeLanguage(localize.getInitialLanguage())
+    },
+  })
+}
+
+const ensureActiveLocalize = (): void => {
+  if (!activeLocalize && initializePendingLocalize) {
+    initializePendingLocalize()
+  }
+}
+
+const requireActiveLocalize = (apiName: string): RuntimeLocalize => {
+  ensureActiveLocalize()
+
+  if (!activeLocalize) {
+    throw new Error(
+      `${apiName} requires LocalizeProvider with config or configureI18n(config) to run first.`,
+    )
+  }
+
+  return activeLocalize
+}
 
 const getDefaultStorage = (): StorageLike | undefined => {
   if (typeof window === 'undefined') {
@@ -229,6 +288,75 @@ export function createI18n<
   }
 }
 
+export function configureI18n<
+  const R extends ResourceTree,
+  const D extends AppLanguage<R>,
+  const N extends NamespaceKey<R, D> = 'translation' extends NamespaceKey<R, D>
+    ? 'translation'
+    : NamespaceKey<R, D>,
+>(config: CreateI18nConfig<R, D, N>): CreatedI18n<R, D, N> {
+  const localize = createI18n(config)
+
+  activateCreatedLocalize(localize)
+
+  return localize
+}
+
+export function defineLocalizeConfig<
+  const R extends ResourceTree,
+  const D extends AppLanguage<R>,
+  const N extends NamespaceKey<R, D> = 'translation' extends NamespaceKey<R, D>
+    ? 'translation'
+    : NamespaceKey<R, D>,
+>(config: CreateI18nConfig<R, D, N>): CreateI18nConfig<R, D, N> {
+  initializePendingLocalize = () => {
+    const localize = createI18n(config)
+    activateCreatedLocalize(localize)
+  }
+
+  // If an instance is already active (tests/HMR), reconfigure immediately.
+  if (activeLocalize) {
+    initializePendingLocalize()
+  }
+
+  return config
+}
+
+export const AppTrans = Trans
+
+export const useAppTranslation: typeof useTranslation = ((...args) => {
+  const localize = requireActiveLocalize('useAppTranslation')
+  const [namespace, options] = args as [
+    Parameters<typeof useTranslation>[0],
+    Parameters<typeof useTranslation>[1],
+  ]
+
+  return useTranslation(namespace, {
+    ...(options ?? {}),
+    i18n: localize.i18n,
+  })
+}) as typeof useTranslation
+
+export const changeLanguage = async (language: string): Promise<void> => {
+  const localize = requireActiveLocalize('changeLanguage')
+  await localize.changeLanguage(language)
+}
+
+export const getLanguage = (): string => {
+  const localize = requireActiveLocalize('getLanguage')
+  return localize.getLanguage()
+}
+
+export const getInitialLanguage = (): string => {
+  const localize = requireActiveLocalize('getInitialLanguage')
+  return localize.getInitialLanguage()
+}
+
+export const isSupportedLanguage = (language: string): boolean => {
+  const localize = requireActiveLocalize('isSupportedLanguage')
+  return localize.isSupportedLanguage(language)
+}
+
 export function LocalizeProvider<
   const R extends ResourceTree,
   const D extends AppLanguage<R>,
@@ -239,7 +367,11 @@ export function LocalizeProvider<
   const localizeRef = React.useRef<CreatedI18n<R, D, N> | undefined>(undefined)
 
   if (!localizeRef.current) {
-    localizeRef.current = createI18n(config)
+    if (activeCreatedLocalize) {
+      localizeRef.current = activeCreatedLocalize as unknown as CreatedI18n<R, D, N>
+    } else {
+      localizeRef.current = configureI18n(config)
+    }
   }
 
   return React.createElement(localizeRef.current.LocalizeProvider, null, children)
