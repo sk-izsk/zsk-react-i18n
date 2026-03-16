@@ -1,0 +1,36 @@
+{
+  "name": "zsk-react-i18n",
+  "version": "0.0.1",
+  "description": "Reusable typed i18n wrapper for React + i18next + react-i18next",
+  "type": "module",
+  "packageManager": "bun@1.2.5",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "bunx tsc -p tsconfig.json",
+    "typecheck": "bunx tsc --noEmit",
+    "typecheck:types": "bunx tsc -p tsconfig.test.json",
+    "test": "bun test",
+    "clean": "rm -rf dist"
+  },
+  "peerDependencies": {
+    "i18next": "^25.0.0",
+    "react": "^19.0.0",
+    "react-i18next": "^16.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "typescript": "^5.9.0"
+  },
+  "license": "MIT"
+}

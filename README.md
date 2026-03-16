@@ -11,6 +11,8 @@ bun add -d typescript @types/react @types/node
 
 ## API
 
+### Option A: Factory (best for typed helpers)
+
 ```ts
 import { createI18n } from 'zsk-react-i18n'
 
@@ -48,6 +50,27 @@ export const {
   getInitialLanguage,
   isSupportedLanguage,
 } = localize
+```
+
+### Option B: Direct Provider
+
+```tsx
+import { LocalizeProvider } from 'zsk-react-i18n'
+
+const config = {
+  resources,
+  defaultLanguage: 'en',
+  fallbackLanguage: 'en',
+  localStorageKey: 'app-language',
+}
+
+export function App() {
+  return (
+    <LocalizeProvider config={config}>
+      <YourRoutes />
+    </LocalizeProvider>
+  )
+}
 ```
 
 ## Optional i18next module augmentation in consumer app
