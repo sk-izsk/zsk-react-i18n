@@ -1,17 +1,19 @@
 export {
-  AppTrans, changeLanguage,
+  AppTrans,
+  changeLanguage,
   configureI18n,
   createI18n,
   defineLocalizeConfig,
   getInitialLanguage,
   getLanguage,
-  isSupportedLanguage, LocalizeProvider, useAppTranslation
+  isSupportedLanguage,
+  LocalizeProvider,
+  useAppTranslation,
 } from './createI18n.js'
 export type {
   AppLanguage,
   CreatedI18n,
   CreateI18nConfig,
   LocalizeProviderProps,
-  StorageLike
+  StorageLike,
 } from './createI18n.js'
-

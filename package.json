@@ -5,15 +5,18 @@
   "keywords": [
     "i18n",
     "i18next",
-    "react-i18next",
-    "react",
-    "typescript",
+    "internationalization",
     "localization",
+    "react",
+    "react-i18next",
     "translations",
-    "internationalization"
+    "typescript"
+  ],
+  "license": "MIT",
+  "files": [
+    "dist"
   ],
   "type": "module",
-  "packageManager": "bun@1.2.5",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -22,16 +25,17 @@
       "import": "./dist/index.js"
     }
   },
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "build": "bunx tsc -p tsconfig.json",
+    "lint": "oxlint . --config .oxlintrc.json",
+    "lint:fix": "oxlint . --fix --config .oxlintrc.json",
+    "format": "oxfmt . --config .oxfmtrc.json --write",
+    "format:check": "oxfmt . --config .oxfmtrc.json --check",
     "typecheck": "bunx tsc --noEmit",
     "typecheck:types": "bunx tsc -p tsconfig.test.json",
     "test": "bun test",
     "clean": "rm -rf dist",
-    "verify": "bun run typecheck && bun run typecheck:types && bun test && bun run clean && bun run build && npm pack --dry-run",
+    "verify": "bun run format:check && bun run lint && bun run typecheck && bun run typecheck:types && bun test && bun run clean && bun run build && npm pack --dry-run",
     "prepublishOnly": "bun run verify",
     "publish:release": "npm publish",
     "release": "bun run verify && npm publish"
@@ -40,13 +44,15 @@
     "i18next": "^25.0.0",
     "react-i18next": "^16.0.0"
   },
-  "peerDependencies": {
-    "react": "^19.0.0"
-  },
   "devDependencies": {
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
+    "oxfmt": "^0.40.0",
+    "oxlint": "^0.17.0",
     "typescript": "^5.9.0"
   },
-  "license": "MIT"
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "packageManager": "bun@1.2.5"
 }
