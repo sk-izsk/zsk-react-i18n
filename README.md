@@ -125,11 +125,18 @@ declare module 'i18next' {
 ## Scripts
 
 - `bun run build`
+- `bun run lint`
+- `bun run lint:fix`
+- `bun run format`
+- `bun run format:check`
 - `bun run typecheck`
 - `bun run typecheck:types`
 - `bun test`
 - `bun run verify` (runs checks + build + npm pack dry run)
 - `bun run release` (runs verify, then publishes)
+
+Lint config: `.oxlintrc.json`
+Format config: `.oxfmtrc.json`
 
 ## Publish
 

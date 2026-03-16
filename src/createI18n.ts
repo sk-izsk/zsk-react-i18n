@@ -116,7 +116,9 @@ const activateCreatedLocalize = <
   R extends ResourceTree,
   D extends AppLanguage<R>,
   N extends NamespaceKey<R, D>,
->(localize: CreatedI18n<R, D, N>): void => {
+>(
+  localize: CreatedI18n<R, D, N>,
+): void => {
   activeCreatedLocalize = localize as unknown as AnyCreatedI18n
 
   setActiveLocalize({
@@ -332,7 +334,7 @@ export const useAppTranslation: typeof useTranslation = ((...args) => {
   ]
 
   return useTranslation(namespace, {
-    ...(options ?? {}),
+    ...options,
     i18n: localize.i18n,
   })
 }) as typeof useTranslation
