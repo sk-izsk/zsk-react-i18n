@@ -150,3 +150,21 @@ If already verified and you only want to publish:
 ```bash
 bun run publish:release
 ```
+
+## CI/CD (Release Please)
+
+Automated workflows are configured in:
+
+- `.github/workflows/ci.yml`
+- `.github/workflows/release-please.yml`
+
+Flow:
+
+1. Push/merge to `dev` triggers Release Please.
+2. Release Please opens/updates a release PR with version bump + changelog.
+3. Merging that release PR creates GitHub release + git tag (for example `v0.0.4`).
+4. The same workflow publishes the package to npm.
+
+Required repo secrets:
+
+- `NPM_TOKEN`: npm automation token with publish permission.
