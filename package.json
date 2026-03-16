@@ -1,6 +1,6 @@
 {
   "name": "zsk-react-i18n",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Reusable typed i18n wrapper for React + i18next + react-i18next",
   "keywords": [
     "i18n",
