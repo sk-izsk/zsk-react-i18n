@@ -1,6 +1,6 @@
 {
   "name": "zsk-react-i18n",
-  "version": "0.0.5",
+  "version": "0.0.4",
   "description": "Reusable typed i18n wrapper for React + i18next + react-i18next",
   "keywords": [
     "i18n",
@@ -12,7 +12,15 @@
     "translations",
     "typescript"
   ],
+  "homepage": "https://github.com/sk-izsk/zsk-react-i18n#readme",
+  "bugs": {
+    "url": "https://github.com/sk-izsk/zsk-react-i18n/issues"
+  },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sk-izsk/zsk-react-i18n.git"
+  },
   "files": [
     "dist"
   ],
