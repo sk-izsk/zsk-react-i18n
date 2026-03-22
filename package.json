@@ -12,7 +12,15 @@
     "translations",
     "typescript"
   ],
+  "homepage": "https://github.com/sk-izsk/zsk-react-i18n#readme",
+  "bugs": {
+    "url": "https://github.com/sk-izsk/zsk-react-i18n/issues"
+  },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sk-izsk/zsk-react-i18n.git"
+  },
   "files": [
     "dist"
   ],
@@ -33,9 +41,9 @@
     "format:check": "oxfmt . --config .oxfmtrc.json --check",
     "typecheck": "bunx tsc --noEmit",
     "typecheck:types": "bunx tsc -p tsconfig.test.json",
-    "test": "bun test",
+    "test": "vitest",
     "clean": "rm -rf dist",
-    "verify": "bun run format && bun run lint && bun run typecheck && bun run typecheck:types && bun test && bun run clean && bun run build && npm pack --dry-run",
+    "verify": "bun run format && bun run lint && bun run typecheck && bun run typecheck:types && bun run clean && bun run build && npm pack --dry-run",
     "prepublishOnly": "bun run verify",
     "publish:release": "npm publish",
     "release": "bun run verify && npm publish"
@@ -45,11 +53,15 @@
     "react-i18next": "^16.0.0"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
+    "jsdom": "^29.0.1",
     "oxfmt": "^0.40.0",
     "oxlint": "^0.17.0",
-    "typescript": "^5.9.0"
+    "typescript": "^5.9.0",
+    "vitest": "^4.1.0"
   },
   "peerDependencies": {
     "react": "^19.0.0"
